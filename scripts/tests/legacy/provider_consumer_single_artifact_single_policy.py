@@ -119,6 +119,10 @@ artifact = create_artifact()
 contract = create_contract()
 use_rule = create_rule()
 
+
+with open("/home/sali/Person.csv", "rb") as fp:
+    s.put(artifact + "/data", data=fp.read())
+
 add_resource_to_catalog(catalog, offers)
 add_representation_to_resource(offers, representation)
 add_artifact_to_representation(representation, artifact)
