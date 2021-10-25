@@ -36,7 +36,7 @@ import io.dataspaceconnector.arx.DataType;
  * @author Florian Kohlmayer, Fabian Prasser, David Gassmann
  */
 abstract class HIPAAMatcherAttributeValue {
-    
+
     /**
      * Pattern which matches numbers and checks whether they are ages
      * @author Florian Kohlmayer, Fabian Prasser, David Gassmann
@@ -45,18 +45,17 @@ abstract class HIPAAMatcherAttributeValue {
 
         /**
          * Creates a new instance
-         * @param constants
          */
         HIPAAMatcherAge(HIPAAConstants constants) {
             super(constants);
         }
-        
+
         @Override
         public boolean matches(String value) {
             if (value.isEmpty()) {
                 return false;
             }
-            
+
             try {
                 int number = Integer.valueOf(value);
                 return (number >= 0 && number <= 130);
@@ -71,7 +70,7 @@ abstract class HIPAAMatcherAttributeValue {
      * @author Florian Kohlmayer, Fabian Prasser, David Gassmann
      */
     static class HIPAAMatcherCity extends HIPAAMatcherAttributeValue {
-        
+
         /**
          * Creates a new instance
          * @param constants
@@ -79,14 +78,14 @@ abstract class HIPAAMatcherAttributeValue {
         HIPAAMatcherCity(HIPAAConstants constants) {
             super(constants);
         }
-        
+
         @Override
         public boolean matches(String value) {
             value = value.trim().toLowerCase();
             return constants.isCity(value);
         }
     }
-    
+
     /**
      * Pattern which matches Dates and years older than 89
      * @author Florian Kohlmayer, Fabian Prasser, David Gassmann
@@ -100,22 +99,22 @@ abstract class HIPAAMatcherAttributeValue {
         HIPAAMatcherDate(HIPAAConstants constants) {
             super(constants);
         }
-        
+
         @Override
         public boolean matches(String value) {
             if (value.isEmpty()) {
                 return false;
             }
-            
+
             value = value.toLowerCase().trim();
 
             if (isDate(value)) {
                 return true;
             }
-            
+
             return isYearOlderThan89(value);
         }
-        
+
         /**
          * @param value Cell content
          * @return True if input is a date
@@ -129,7 +128,7 @@ abstract class HIPAAMatcherAttributeValue {
             }
             return false;
         }
-        
+
         /**
          * @param value Cell content
          * @return True if input is a year and older than 89
@@ -138,7 +137,7 @@ abstract class HIPAAMatcherAttributeValue {
             if (value.length() != 4) {
                 return false;
             }
-            
+
             CalendarValidator validator = CalendarValidator.getInstance();
             Calendar date = validator.validate(value, "yyyy");
             if (date == null) {
@@ -149,7 +148,7 @@ abstract class HIPAAMatcherAttributeValue {
             return ((currentYear - birthYear) > 89) && ((currentYear - birthYear) < 130); // Filter out differences above 130, as humans do not get older than that
         }
     }
-    
+
     /**
      * Pattern which matches email addresses
      * @author Florian Kohlmayer, Fabian Prasser, David Gassmann
@@ -163,14 +162,14 @@ abstract class HIPAAMatcherAttributeValue {
         HIPAAMatcherEMail(HIPAAConstants constants) {
             super(constants);
         }
-        
+
         @Override
         public boolean matches(String value) {
             EmailValidator validator = EmailValidator.getInstance();
             return validator.isValid(value);
         }
     }
-    
+
     /**
      * Pattern which matches first names with a predefined list of names
      * @author Florian Kohlmayer, Fabian Prasser, David Gassmann
@@ -184,14 +183,14 @@ abstract class HIPAAMatcherAttributeValue {
         HIPAAMatcherFirstName(HIPAAConstants constants) {
             super(constants);
         }
-        
+
         @Override
         public boolean matches(String value) {
             value = value.trim().toLowerCase();
             return constants.isFirstname(value);
         }
     }
-    
+
     /**
      * Pattern which matches IBAN account numbers
      * @author Florian Kohlmayer, Fabian Prasser, David Gassmann
@@ -200,19 +199,19 @@ abstract class HIPAAMatcherAttributeValue {
         HIPAAMatcherIBAN() {
             super("[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,16}");
         }
-        
+
         @Override
         public boolean matches(String value) {
             if (!super.matches(value)) {
                 return false;
             }
-            
+
             value = value.replaceAll("\\s+", "");
             IBANCheckDigit validator = new IBANCheckDigit();
             return validator.isValid(value);
         }
     }
-    
+
     /**
      * Pattern which maches IPv4 and IPv6 addresses
      * @author Florian Kohlmayer, Fabian Prasser, David Gassmann
@@ -226,14 +225,14 @@ abstract class HIPAAMatcherAttributeValue {
         HIPAAMatcherIP(HIPAAConstants constants) {
             super(constants);
         }
-        
+
         @Override
         public boolean matches(String value) {
             InetAddressValidator validator = InetAddressValidator.getInstance();
             return validator.isValid(value);
         }
     }
-    
+
     /**
      * Pattern which matches last names with a predefined list of names
      * @author Florian Kohlmayer, Fabian Prasser, David Gassmann
@@ -247,7 +246,7 @@ abstract class HIPAAMatcherAttributeValue {
         HIPAAMatcherLastName(HIPAAConstants constants) {
             super(constants);
         }
-        
+
         @Override
         public boolean matches(String value) {
             value = value.trim().toLowerCase();
@@ -277,33 +276,33 @@ abstract class HIPAAMatcherAttributeValue {
         HIPAAMatcherState(HIPAAConstants constants) {
             super(constants);
         }
-        
+
         @Override
         public boolean matches(String value) {
             value = value.trim().toLowerCase();
             return constants.isState(value);
         }
     }
-    
+
     /**
      * Pattern which matches a string with the provided regular expression
      * @author Florian Kohlmayer, Fabian Prasser, David Gassmann
      */
     static abstract class HIPAAMatcherString extends HIPAAMatcherAttributeValue {
         Matcher matcher;
-        
+
         HIPAAMatcherString(String regex) {
             super(null);
             Pattern pattern = Pattern.compile(regex);
             matcher = pattern.matcher("");
         }
-        
+
         @Override
         public boolean matches(String value) {
             return matcher.reset(value).matches();
         }
     }
-    
+
     /**
      * Pattern which matches an URL
      * @author Florian Kohlmayer, Fabian Prasser, David Gassmann
@@ -317,14 +316,14 @@ abstract class HIPAAMatcherAttributeValue {
         HIPAAMatcherURL(HIPAAConstants constants) {
             super(constants);
         }
-        
+
         @Override
         public boolean matches(String value) {
             UrlValidator validator = UrlValidator.getInstance();
             return validator.isValid(value);
         }
     }
-    
+
     /**
      * Pattern which matches names a vehicle identification number
      * @author Florian Kohlmayer, Fabian Prasser, David Gassmann
@@ -333,14 +332,14 @@ abstract class HIPAAMatcherAttributeValue {
         HIPAAMatcherVIN() {
             super("[0-9A-Z]{17}");
         }
-        
+
         @Override
         public boolean matches(String value) {
             value = value.replaceAll("\\s+", "").replaceAll("-", "");
             return super.matches(value);
         }
     }
-    
+
     /**
      * Pattern which matches a ZIP code
      * @author Florian Kohlmayer, Fabian Prasser, David Gassmann
@@ -354,30 +353,30 @@ abstract class HIPAAMatcherAttributeValue {
          */
         HIPAAMatcherZIP(HIPAAConstants constants) {
             super(constants);
-        
+
             zipCodes = new HashSet<>();
-            
+
             zipCodes.add("036");
             zipCodes.add("059");
             zipCodes.add("063");
             zipCodes.add("102");
             zipCodes.add("203");
             zipCodes.add("556");
-            
+
             zipCodes.add("692");
             zipCodes.add("790");
             zipCodes.add("821");
             zipCodes.add("823");
             zipCodes.add("830");
             zipCodes.add("831");
-            
+
             zipCodes.add("878");
             zipCodes.add("879");
             zipCodes.add("884");
             zipCodes.add("890");
             zipCodes.add("893");
         }
-        
+
         @Override
         public boolean matches(String value) {
             value = value.replaceAll("\\s+", "").replaceAll("-", "");
@@ -401,7 +400,7 @@ abstract class HIPAAMatcherAttributeValue {
     public HIPAAMatcherAttributeValue(HIPAAConstants constants) {
         this.constants = constants;
     }
-    
+
     /**
      * Returns true if the value matches the given Pattern.
      * @param value

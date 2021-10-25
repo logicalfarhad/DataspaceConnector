@@ -24,6 +24,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -82,5 +83,14 @@ public class ConnectorApplication {
                                 .name(properties.getProperty("license"))
                                 .url(properties.getProperty("license_url")))
                 );
+    }
+
+
+
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        var multipart = new CommonsMultipartResolver();
+        multipart.setMaxUploadSize(3 * 1024 * 1024);
+        return multipart;
     }
 }
