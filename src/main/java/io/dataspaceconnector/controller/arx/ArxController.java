@@ -1,58 +1,66 @@
 package io.dataspaceconnector.controller.arx;
 
+import io.dataspaceconnector.controller.arx.util.FileInfo;
+import io.dataspaceconnector.controller.arx.util.FilesStorageService;
+import io.dataspaceconnector.controller.arx.util.ResponseMessage;
+import io.dataspaceconnector.controller.arx.util.SomeForm;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequiredArgsConstructor
 @Tag(name = "Anonymize", description = "Endpoints for ARX Anonymizer")
 public class ArxController {
-    private final Path root = Paths.get("uploads");
 
-    @RequestMapping(path = "/upload", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<ResponseMessage> uploadFile(SomeForm form) {
-        String message;
-        try {
-            if (!Files.isDirectory(root)) {
-                Files.createDirectory(root);
-            }
-            var file = form.getMf();
-            if (file != null) {
-                var exists = Files.exists(root.resolve(file.getOriginalFilename()));
-                if(exists)
-                    Files.delete(root.resolve(file.getOriginalFilename()));
-                Files.copy(file.getInputStream(), root.resolve(file.getOriginalFilename()));
-                message = "Uploaded the file successfully: " + file.getOriginalFilename();
-                return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
-            } else {
-                message = "File not found!";
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage(message));
-            }
-        } catch (Exception e) {
-            message = "Could not upload the file: " + form.getMf().getOriginalFilename() + "!";
-        }
-        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+    private final FilesStorageService _storageService;
+
+    @Autowired
+    public ArxController(FilesStorageService storageService) {
+        this._storageService = storageService;
     }
-}
 
-@Data
-class SomeForm {
-    private MultipartFile mf;
-    private String str;
+    @PostMapping("/upload")
+    public ResponseEntity<ResponseMessage> uploadFile(SomeForm file) {
+        String message;
+        var _file = file.getMf();
+        try {
+            _storageService.save(file.getMf());
+            message = "Uploaded the file successfully: " + _file.getOriginalFilename();
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+        } catch (Exception e) {
+            message = "Could not upload the file: " + _file.getOriginalFilename() + "!";
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+        }
+    }
+
+    @GetMapping("/files")
+    public ResponseEntity<List<FileInfo>> getListFiles() {
+        var fileInfos = _storageService.loadAll().map(path -> {
+            String filename = path.getFileName().toString();
+            String url = MvcUriComponentsBuilder
+                    .fromMethodName(ArxController.class, "getFile", path.getFileName().toString()).build().toString();
+            return new FileInfo(filename,url);
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
+    }
+
+    @GetMapping("/files/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+        Resource file = _storageService.load(filename);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
 }
 
 
