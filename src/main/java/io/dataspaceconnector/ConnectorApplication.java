@@ -15,17 +15,19 @@
  */
 package io.dataspaceconnector;
 
+import io.dataspaceconnector.controller.arx.util.FilesStorageService;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -41,7 +43,10 @@ import java.util.Properties;
         "de.fraunhofer.ids.*",
         "de.fraunhofer.ids.messaging.*"
 })
-public class ConnectorApplication {
+public class ConnectorApplication implements CommandLineRunner {
+
+    @Resource
+    FilesStorageService storageService;
 
     /**
      * The main method.
@@ -85,12 +90,18 @@ public class ConnectorApplication {
                 );
     }
 
+    @Override
+    public void run(String... args) throws Exception {
+        storageService.deleteAll();
+        storageService.init();
+    }
 
 
+/*
     @Bean
     public CommonsMultipartResolver multipartResolver() {
         var multipart = new CommonsMultipartResolver();
         multipart.setMaxUploadSize(3 * 1024 * 1024);
         return multipart;
-    }
+    }*/
 }

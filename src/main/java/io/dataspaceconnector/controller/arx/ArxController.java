@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @RestController
 @Tag(name = "Anonymize", description = "Endpoints for ARX Anonymizer")
 public class ArxController {
-
     private final FilesStorageService _storageService;
 
     @Autowired
@@ -34,10 +33,13 @@ public class ArxController {
         try {
             _storageService.save(file.getMf());
             message = "Uploaded the file successfully: " + _file.getOriginalFilename();
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseMessage(message));
         } catch (Exception e) {
             message = "Could not upload the file: " + _file.getOriginalFilename() + "!";
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+            return ResponseEntity
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseMessage(message));
         }
     }
 
@@ -46,11 +48,20 @@ public class ArxController {
         var fileInfos = _storageService.loadAll().map(path -> {
             String filename = path.getFileName().toString();
             String url = MvcUriComponentsBuilder
-                    .fromMethodName(ArxController.class, "getFile", path.getFileName().toString()).build().toString();
+                    .fromMethodName(ArxController.class,
+                            "getFile",
+                            path.getFileName().toString()).build().toString();
             return new FileInfo(filename,url);
         }).collect(Collectors.toList());
 
         return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
+    }
+
+    @GetMapping("/getfileContent/{count}")
+    @ResponseBody
+    public ResponseEntity<List<String>> getFileContent(@PathVariable int count) {
+        var fileContent = _storageService.getLines(count);
+        return ResponseEntity.status(HttpStatus.OK).body(fileContent);
     }
 
     @GetMapping("/files/{filename:.+}")
