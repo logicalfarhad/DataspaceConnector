@@ -1,13 +1,13 @@
 /*
  * ARX: Powerful Data Anonymization
  * Copyright 2012 - 2021 Fabian Prasser and contributors
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -106,7 +106,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
                 this.locale = null;
             }
         }
-        
+
         /**
          * Create a date with a format string and a given locale. Format strings must be valid formats
          * for <code>SimpleDateFormat</code>.
@@ -195,7 +195,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             } else if (!getLocale().equals(other.getLocale())) { return false; }
             return true;
         }
-        
+
         @Override
         public String format(Date s){
             if (s == null) {
@@ -203,24 +203,24 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             }
         	return format.format(s);
         }
-        
+
         /**
          * Format with timezone
          */
         public String format(Date s, TimeZone zone){
-            
+
             // Check
             if (s == null) {
                 return NULL_VALUE;
             }
-            
+
             // Prepare
             SimpleDateFormat sdf = format;
             if (zone != null) {
-                sdf = (SimpleDateFormat) format.clone();   
+                sdf = (SimpleDateFormat) format.clone();
                 sdf.setTimeZone(zone);
             }
-            
+
             // Format
             return sdf.format(s);
         }
@@ -238,12 +238,12 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         public DataTypeDescription<Date> getDescription(){
             return description;
         }
-        
+
         @Override
         public String getFormat() {
             return string;
         }
-        
+
         /**
          * Returns the locale of the format.
          *
@@ -316,7 +316,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             long d2 = parse(multiplicator).getTime();
             return format(new Date(d1 * d2));
         }
-        
+
         @Override
         public Date parse(String s) {
             if(s.length() == NULL_VALUE.length() && s.toUpperCase().equals(NULL_VALUE)) {
@@ -340,7 +340,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             long d2 = divisor.getTime();
             return (double)d1 / (double)d2;
         }
-        
+
         @Override
         public Date subtract(Date minuend, Date subtrahend) {
             long d1 = minuend.getTime();
@@ -392,7 +392,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         private ARXDecimal(){
             this("Default");
         }
-        
+
         /**
          * Create a numeric with a format string and default locale. Format strings must be valid formats
          * for <code>DecimalFormat</code>.
@@ -434,7 +434,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         public Double add(Double augend, Double addend) {
             return parse(format(augend + addend));
         }
-        
+
         @Override
         public DataType<Double> clone() {
             return this;
@@ -458,7 +458,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
 
         @Override
         public int compare(final String s1, final String s2) throws NumberFormatException {
-            
+
             try {
                 Double d1 = parse(s1);
                 Double d2 = parse(s2);
@@ -527,7 +527,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         public DataTypeDescription<Double> getDescription(){
             return description;
         }
-        
+
         @Override
         public String getFormat() {
             return string;
@@ -550,14 +550,14 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         public Double getMaximum() {
             return Double.MAX_VALUE;
         }
-        
+
         @Override
         public Double getMinimum() {
             return -Double.MAX_VALUE;
         }
 
         @Override
-        public int hashCode() { 
+        public int hashCode() {
             if (string==null) {
                 return getLocale().hashCode();
             }
@@ -650,7 +650,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
      * @author Fabian Prasser
      */
     public static class ARXInteger extends DataType<Long> implements DataTypeWithFormat, DataTypeWithRatioScale<Long>  {
-        
+
         /**  SVUID */
         private static final long serialVersionUID = -631163546929231044L;
 
@@ -677,7 +677,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         private ARXInteger(){
             this("Default");
         }
-        
+
         /**
          * Create a numeric with a format string and default locale. Format strings must be valid formats
          * for <code>DecimalFormat</code>.
@@ -687,7 +687,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         private ARXInteger(String format){
             if (format == null || format.equals("Default")){
                 this.format = null;
-                this.string = null;   
+                this.string = null;
                 this.locale = null;
             } else {
                 this.format = new DecimalFormat(format);
@@ -695,7 +695,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
                 this.locale = null;
             }
         }
-        
+
         /**
          * Create a numeric with a format string. Format strings must be valid formats
          * for <code>DecimalFormat</code>.
@@ -715,12 +715,12 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
                 this.locale = locale;
             }
         }
-        
+
         @Override
         public Long add(Long augend, Long addend) {
             return augend + addend;
         }
-        
+
         @Override
         public DataType<Long> clone() {
             return this;
@@ -740,7 +740,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
 
         @Override
         public int compare(final String s1, final String s2) throws NumberFormatException {
-            
+
             try {
                 Long d1 = parse(s1);
                 Long d2 = parse(s2);
@@ -752,7 +752,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
                     return -1;
                 }
                 return d1.compareTo(d2);
-                
+
             } catch (Exception e) {
                 throw new IllegalArgumentException(e.getMessage() + ": " + s1 +" or " + s2, e);
             }
@@ -782,7 +782,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             } else if (!getLocale().equals(other.getLocale())) { return false; }
             return true;
         }
-        
+
         @Override
         public String format(Long s){
             if (s == null) {
@@ -794,7 +794,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
                 return format.format(s);
             }
         }
-        
+
         @Override
         public Long fromDouble(Double d) {
             if (d == null) {
@@ -808,7 +808,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         public DataTypeDescription<Long> getDescription(){
             return description;
         }
-        
+
         @Override
         public String getFormat() {
             return string;
@@ -870,7 +870,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         public Long multiply(Long multiplicand, int multiplicator) {
             return multiplicand * multiplicator;
         }
-        
+
         @Override
         public Long multiply(Long multiplicand, Long multiplicator) {
             return (long)Math.round((double)multiplicand * (double)multiplicator);
@@ -898,12 +898,12 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
                 throw new IllegalArgumentException(e.getMessage() + ": " + s, e);
             }
         }
-        
+
         @Override
         public double ratio(Long dividend, Long divisor) {
             return (double)dividend / (double)divisor;
         }
-        
+
         @Override
         public Long subtract(Long minuend, Long subtrahend) {
             return minuend - subtrahend;
@@ -940,7 +940,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             @Override public DataType<String> newInstance(String format) {return createOrderedString(format);}
             @Override public DataType<String> newInstance(String format, Locale locale) {return createOrderedString(format);}
         };
-        
+
         /**
          * Creates a new instance.
          */
@@ -957,7 +957,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             if (format.size()==0) {
                 this.order = null;
             } else {
-                this.order = new HashMap<String, Integer>(); 
+                this.order = new HashMap<String, Integer>();
                 for (int i=0; i< format.size(); i++){
                     if (this.order.put(format.get(i), i) != null) {
                         throw new IllegalArgumentException("Duplicate value '"+format.get(i)+"'");
@@ -976,7 +976,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
                 this.order = null;
             } else {
                 try {
-                    this.order = new HashMap<String, Integer>(); 
+                    this.order = new HashMap<String, Integer>();
                     BufferedReader reader = new BufferedReader(new StringReader(format));
                     int index = 0;
                     String line = reader.readLine();
@@ -993,7 +993,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
                 }
             }
         }
-        
+
         /**
          * Creates a new instance.
          *
@@ -1003,7 +1003,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             if (format.length == 0) {
                 this.order = null;
             } else {
-                this.order = new HashMap<String, Integer>(); 
+                this.order = new HashMap<String, Integer>();
                 for (int i=0; i< format.length; i++){
                     if (this.order.put(format[i], i) != null) {
                         throw new IllegalArgumentException("Duplicate value '"+format[i]+"'");
@@ -1011,15 +1011,15 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
                 }
             }
         }
-        
+
         @Override
         public DataType<String> clone() {
             return this;
         }
-        
+
         @Override
         public int compare(String s1, String s2) {
-            
+
             s1 = parse(s1);
             s2 = parse(s2);
             if (s1 == null && s2 == null) {
@@ -1046,7 +1046,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             if (obj == null) { return false; }
             if (getClass() != obj.getClass()) { return false; }
             if (this.order == null) {
-                if (((ARXOrderedString)obj).order != null) { 
+                if (((ARXOrderedString)obj).order != null) {
                     return false;
                 }
             } else {
@@ -1067,12 +1067,12 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             }
         	return s;
         }
-        
+
         @Override
         public DataTypeDescription<String> getDescription(){
             return description;
         }
-        
+
         /**
          * Returns all elements backing this datatype.
          *
@@ -1101,7 +1101,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
                 @Override
                 public int compare(String arg0, String arg1) {
                     return order.get(arg0).compareTo(order.get(arg1));
-                } 
+                }
             });
             StringBuilder b = new StringBuilder();
             for (int i=0; i<list.size(); i++) {
@@ -1112,7 +1112,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             }
             return b.toString();
         }
-        
+
         /**
          * Returns the locale of the format.
          *
@@ -1154,17 +1154,17 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             return "Ordinal";
         }
     }
-    
+
     /**
      * Base class for string types.
      *
      * @author Fabian Prasser
      */
     public static class ARXString extends DataType<String> {
-        
+
         /**  SVUID */
         private static final long serialVersionUID = 903334212175979691L;
-        
+
         /** The description of the data type. */
         private static final DataTypeDescription<String> description = new DataTypeDescription<String>(String.class, "String", DataScale.NOMINAL, false, new ArrayList<String>()){
             private static final long serialVersionUID = -6679110898204862834L;
@@ -1172,12 +1172,12 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             @Override public DataType<String> newInstance(String format) {return STRING;}
             @Override public DataType<String> newInstance(String format, Locale locale) {return STRING;}
         };
-        
+
         @Override
         public DataType<String> clone() {
             return this;
         }
-        
+
         @Override
         public int compare(final String s1, final String s2) {
             if (s1 == null || s2 == null) {
@@ -1201,7 +1201,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             }
             return s;
         }
-        
+
         @Override
         public DataTypeDescription<String> getDescription(){
             return description;
@@ -1211,7 +1211,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         public int hashCode() {
             return ARXString.class.hashCode();
         }
-        
+
         @Override
         public boolean isValid(String s) {
             return s != null;
@@ -1230,7 +1230,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             return "String";
         }
     }
-    
+
     /**
      * An entry in the list of available data types.
      *
@@ -1253,10 +1253,10 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
 
         /** A human readable label. */
         private String            label;
-        
+
         /** The associated scale of measure*/
         private DataScale         scale;
-        
+
         /**
          * Internal constructor.
          *
@@ -1266,10 +1266,10 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
          * @param hasFormat
          * @param exampleFormats
          */
-        private DataTypeDescription(Class<T> clazz, 
+        private DataTypeDescription(Class<T> clazz,
                                     String label,
                                     DataScale scale,
-                                    boolean hasFormat, 
+                                    boolean hasFormat,
                                     List<String> exampleFormats) {
             this.clazz = clazz;
             this.label = label;
@@ -1277,7 +1277,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             this.hasFormat = hasFormat;
             this.exampleFormats = exampleFormats;
         }
-        
+
         /**
          * Returns a list of example formats.
          *
@@ -1286,7 +1286,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         public List<String> getExampleFormats() {
             return exampleFormats;
         }
-        
+
         /**
          * Returns a human readable label.
          *
@@ -1295,7 +1295,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         public String getLabel() {
             return label;
         }
-        
+
         /**
          * Scale
          * @return
@@ -1303,7 +1303,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         public DataScale getScale() {
             return scale;
         }
-        
+
         /**
          * Returns the wrapped java class.
          *
@@ -1312,7 +1312,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         public Class<?> getWrappedClass() {
             return clazz;
         }
-        
+
         /**
          * Returns whether the type be parameterized with a format string. Note that every data type
          * can be instantiated without a format string, using a default format.
@@ -1321,14 +1321,14 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         public boolean hasFormat() {
             return hasFormat;
         }
-        
+
         /**
          * Creates a new instance with default format string and default locale.
          *
          * @return
          */
         public abstract DataType<T> newInstance();
-        
+
         /**
          * Creates a new instance with the given format string and default locale.
          *
@@ -1356,24 +1356,24 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
             return newInstance(null, locale);
         }
     }
-    
+
     /**
      * An interface for data types with format.
      *
      * @author Fabian Prasser
      */
     public static interface DataTypeWithFormat {
-        
+
         /**
          * Format
-         * 
+         *
          * @return
          */
         public abstract String getFormat();
-        
+
         /**
          * Locale
-         * 
+         *
          * @return
          */
         public abstract Locale getLocale();
@@ -1386,7 +1386,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
      * @param <T>
      */
     public static interface DataTypeWithRatioScale<T> {
-        
+
         /**
          * Add
          *
@@ -1425,7 +1425,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
          * @return
          */
         public abstract String divide(String dividend, String divisor);
-        
+
         /**
          * Divide
          *
@@ -1434,7 +1434,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
          * @return
          */
         public abstract T divide(T dividend, T divisor);
-        
+
         /**
          * Format
          *
@@ -1446,7 +1446,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         /**
          * Converts a double into a value.
          *
-         * @param s
+         * @param
          * @return
          */
         public abstract T fromDouble(Double d);
@@ -1464,7 +1464,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
          * @return
          */
         public T getMaximum();
-        
+
         /**
          * Minimum
          *
@@ -1516,7 +1516,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
          * @return
          */
         public abstract T multiply(T multiplicand, T multiplicator);
-        
+
         /**
          * Parse
          *
@@ -1533,7 +1533,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
          * @return
          */
         public abstract double ratio(T dividend, T divisor);
-        
+
         /**
          * Subtract
          *
@@ -1542,11 +1542,11 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
          * @return
          */
         public abstract T subtract(T minuend, T subtrahend);
-        
+
         /**
          * Converts a double into a value.
          *
-         * @param s
+         * @param
          * @return
          */
         public abstract Double toDouble(T t);
@@ -1557,7 +1557,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
 
     /** The string representing the ANY value */
     public static final String ANY_VALUE = "*";
-    
+
     /**  SVUID */
     private static final long serialVersionUID = -4380267779210935078L;
 
@@ -1575,7 +1575,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
 
     /** A ordered string data type. */
     public static final DataType<String>             ORDERED_STRING  = new ARXOrderedString();
-    
+
     /**
      * A date data type with given format.
      *
@@ -1598,7 +1598,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
     public static final DataType<Date> createDate(final String format, final Locale locale) {
         return new ARXDate(format, locale);
     }
-    
+
     /**
      * A decimal data type with given format.
      *
@@ -1609,7 +1609,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
     public static final DataType<Double> createDecimal(final String format) {
         return new ARXDecimal(format);
     }
-    
+
     /**
      * Creates a decimal data type with a format string from the given locale.
      *
@@ -1620,7 +1620,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
     public static DataType<Double> createDecimal(String format, Locale locale) {
         return new ARXDecimal(format, locale);
     }
-    
+
     /**
      * An integer data type with given format.
      *
@@ -1631,7 +1631,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
     public static final DataType<Long> createInteger(final String format) {
         return new ARXInteger(format);
     }
-    
+
     /**
      * An integer data type with given format using the given locale.
      *
@@ -1643,37 +1643,37 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
     public static final DataType<Long> createInteger(final String format, Locale locale) {
         return new ARXInteger(format, locale);
     }
-    
+
     /**
-     * A ordered string type with given format. 
-     * 
+     * A ordered string type with given format.
+     *
      * @param format List of ordered strings
      * @return
      */
     public static final DataType<String> createOrderedString(final List<String> format) {
         return new ARXOrderedString(format);
     }
-    
+
     /**
-     * A ordered string type with given format. 
-     * 
+     * A ordered string type with given format.
+     *
      * @param format List of ordered strings separated by line feeds
      * @return
      */
     public static final DataType<String> createOrderedString(final String format) {
         return new ARXOrderedString(format);
     }
-    
+
     /**
-     * A ordered string type with given format. 
-     * 
+     * A ordered string type with given format.
+     *
      * @param format List of ordered strings
      * @return
      */
     public static final DataType<String> createOrderedString(final String[] format) {
         return new ARXOrderedString(format);
     }
-    
+
     /**
      * Returns whether the value represents any value
      * @param value
@@ -1691,7 +1691,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
     public static final boolean isNull(String value) {
         return value == null || (value.length() == NULL_VALUE.length() && value.toUpperCase().equals(NULL_VALUE));
     }
-    
+
     /**
      * Lists all available data types.
      *
@@ -1708,7 +1708,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
     }
 
     /**
-     * 
+     *
      * Returns a datatype for the given class.
      *
      * @param <U>
@@ -1724,7 +1724,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         }
         return null;
     }
-    
+
     /**
      * Provides a list of example formats for the <code>Date</code> data type.
      *
@@ -1787,7 +1787,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
         result.add("#,##0.00");
         result.add("#,##0");
         result.add("#,##0%");
-        
+
         // Create list of common patterns
         Set<String> set = new HashSet<String>();
         set.addAll(result);
@@ -1806,17 +1806,17 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
                     }
                 }
             }
-            
+
         }
         return result;
     }
-    
+
     @Override
     public abstract DataType<T> clone();
-    
+
     /**
-     * Compares two values. The result is 0 if both values are equal, 
-     * less than 0 if the first value is less than the second argument, 
+     * Compares two values. The result is 0 if both values are equal,
+     * less than 0 if the first value is less than the second argument,
      * and greater than 0 if the first value is greater than the second argument.
      * @param s1
      * @param s2
@@ -1825,7 +1825,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
      * @throws ParseException
      */
     public abstract int compare(String s1, String s2) throws NumberFormatException, ParseException;
-    
+
     /**
      * Compare.
      *
@@ -1834,7 +1834,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
      * @return
      */
     public abstract int compare(T t1, T t2);
-    
+
     /**
      * Returns a new function builder.
      *
@@ -1843,7 +1843,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
     public AggregateFunctionBuilder<T> createAggregate(){
         return AggregateFunction.forType(this);
     }
-    
+
     @Override
     public abstract boolean equals(Object other);
 
@@ -1854,7 +1854,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
      * @return
      */
     public abstract String format(T t);
-    
+
     /**
      * Returns a description of the data type.
      *
@@ -1864,7 +1864,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
 
     @Override
     public abstract int hashCode();
-    
+
     /**
      * Checks whether the given string conforms to the data type's format.
      *
@@ -1872,7 +1872,7 @@ public abstract class DataType<T> implements Serializable, Comparator<T> { // NO
      * @return
      */
     public abstract boolean isValid(String s);
-    
+
     /**
      * Converts a string into a value.
      *

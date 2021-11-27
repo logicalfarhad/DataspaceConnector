@@ -51,11 +51,31 @@ public class ArxController {
                     .fromMethodName(ArxController.class,
                             "getFile",
                             path.getFileName().toString()).build().toString();
-            return new FileInfo(filename,url);
+            return new FileInfo(filename, url);
         }).collect(Collectors.toList());
 
         return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
     }
+
+
+    @GetMapping("/getHeaderList")
+    @ResponseBody
+    public ResponseEntity<List<String>> getHeaders() {
+        var fileContent = _storageService.getLines(0);
+        return ResponseEntity.status(HttpStatus.OK).body(fileContent);
+    }
+
+    @GetMapping("/getItemList")
+    @ResponseBody
+    public ResponseEntity<String[][]> getItems() {
+        var fileContent = _storageService.getAllItems();
+      //  var interval=  _storageService.intervalBased();
+    //    var orderBased = _storageService.orderBased();
+        var dates = _storageService.dates();
+        return ResponseEntity.status(HttpStatus.OK).body(dates);
+    }
+
+
 
     @GetMapping("/getfileContent/{count}")
     @ResponseBody

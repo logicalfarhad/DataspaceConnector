@@ -15,7 +15,10 @@ public interface FilesStorageService {
 
     void deleteAll();
 
+    List<String> getAllItems();
     List<String> getLines(int count);
-
+    String[][] orderBased();
     Stream<Path> loadAll();
+    String[][] dates();
+    String[][] intervalBased();
 }

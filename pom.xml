@@ -555,6 +555,18 @@
 			<artifactId>spring-web</artifactId>
 			<version>5.3.10</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/colt/colt -->
+		<dependency>
+			<groupId>colt</groupId>
+			<artifactId>colt</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.sourceforge.parallelcolt/parallelcolt -->
+		<dependency>
+			<groupId>net.sourceforge.parallelcolt</groupId>
+			<artifactId>parallelcolt</artifactId>
+			<version>0.10.0</version>
+		</dependency>
 
 	</dependencies>
 

@@ -1,13 +1,13 @@
 /*
  * ARX: Powerful Data Anonymization
  * Copyright 2014 - 2015 Karol Babioch, Fabian Prasser, Florian Kohlmayer
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,17 +38,17 @@ public class ImportConfigurationCSV extends ImportConfigurationFile implements I
 
     /** Character that escapes. */
     private final char   escape;
-    
+
     /** Max columns*/
     private final int    maxColumns;
 
     /**
      * Indicates whether first row contains header (names of columns).
-     * 
+     *
      * @see {@link IImportConfigurationWithHeader}
      */
     private boolean      containsHeader;
-    
+
     /** The charset of the CSV file */
     private final Charset charset;
 
@@ -69,7 +69,7 @@ public class ImportConfigurationCSV extends ImportConfigurationFile implements I
      *
      * @param fileLocation {@link #setFileLocation(String)}
      * @param charset {@link #charset}
-     * @param delimiter {@link #separator}
+     * @param delimiter {@link #delimiter}
      * @param containsHeader {@link #containsHeader}
      */
     public ImportConfigurationCSV(String fileLocation,
@@ -177,10 +177,10 @@ public class ImportConfigurationCSV extends ImportConfigurationFile implements I
 
     /**
      * Adds a single column to import from
-     * 
+     *
      * This makes sure that only {@link ImportColumnCSV} can be added, otherwise
      * an {@link IllegalArgumentException} will be thrown.
-     * 
+     *
      * @param column
      *            A single column to import from, {@link ImportColumnCSV}
      */

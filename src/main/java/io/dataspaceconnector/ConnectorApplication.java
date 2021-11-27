@@ -95,13 +95,4 @@ public class ConnectorApplication implements CommandLineRunner {
         storageService.deleteAll();
         storageService.init();
     }
-
-
-/*
-    @Bean
-    public CommonsMultipartResolver multipartResolver() {
-        var multipart = new CommonsMultipartResolver();
-        multipart.setMaxUploadSize(3 * 1024 * 1024);
-        return multipart;
-    }*/
 }
