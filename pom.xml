@@ -508,7 +508,7 @@
 		<dependency>
 			<groupId>com.github.ralfstuckert.pdfbox-layout</groupId>
 			<artifactId>pdfbox2-layout</artifactId>
-			<version>0.8.6</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
